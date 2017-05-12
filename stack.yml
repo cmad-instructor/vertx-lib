@@ -1,0 +1,32 @@
+version: "3"
+
+networks:
+  nw01:
+    driver: overlay
+
+services:
+  app:
+    image: initcron/vertx-lib:staging
+    links:
+      - mongodb:mongo
+    ports:
+      - 7000:8080
+    restart: always
+    networks:
+      - nw01
+    deploy:
+      replicas: 10
+      update_config:
+        parallelism: 2
+        delay: 10s
+
+
+  mongodb:
+    image: mongo:latest
+    networks:
+      - nw01
+    deploy:
+      replicas: 10
+      update_config:
+        parallelism: 2
+        delay: 10s
